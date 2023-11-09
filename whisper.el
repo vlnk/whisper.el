@@ -237,13 +237,13 @@ current buffer."
     "-ar" "16000"
      "-y" ,output-file))
 
-(defun whisper-path ()
+(defun whisper--get-command-path ()
   "Gets the whisper path according to custom configuration."
   (cond ((stringp whisper-cli-binary) whisper-cli-binary)
         ((stringp whisper--install-path)
          (let ((base (expand-file-name (file-name-as-directory whisper--install-path))))
            (concat base (if (eq system-type 'windows-nt) "main.exe" "main"))))
-        (t (error "Variables whisper-cli-binary or whisper-install-directory sould be set"))))
+        (t (error "Variables whisper-cli-binary or whisper-install-directory should be set"))))
 
 (defun whisper-command (input-file)
   "Produces whisper.cpp command to be run on the INPUT-FILE.
@@ -251,7 +251,7 @@ current buffer."
 If you want to use something other than whisper.cpp, you should override this
 function to produce the command for the inference engine of your choice."
   (whisper--setup-mode-line :show 'transcribing)
-    `(,(whisper-path)
+    `(,(whisper--get-command-path)
       ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
       ;; ,@(when whisper-enable-speed-up '("--speed-up"))
       ,@(when whisper-translate '("--translate"))
