@@ -160,6 +160,11 @@ current buffer."
   :type 'string
   :group 'whisper)
 
+(defcustom whisper-cli-model nil
+  "Specify direclty a model to the whisper.cpp cli."
+  :type 'string
+  :group 'whisper)
+
 ;;; Internal variables
 
 (defvar whisper--stdout-buffer-name "*whisper-stdout*")
@@ -252,7 +257,7 @@ function to produce the command for the inference engine of your choice."
       ,@(when whisper-translate '("--translate"))
       ,@(when whisper-show-progress-in-mode-line '("--print-progress"))
       "--language" ,whisper-language
-      "--model" ,(whisper--model-file whisper-quantize)
+      "--model" ,(if whisper-cli-model whisper-cli-model (whisper--model-file whisper-quantize))
       "--no-timestamps"
       "--file" ,input-file))
 
